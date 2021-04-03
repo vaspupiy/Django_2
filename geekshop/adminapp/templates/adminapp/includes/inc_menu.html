@@ -10,8 +10,8 @@
         <a class="{% if 'category' in request.resolver_match.url_name or 'product' in request.resolver_match.url_name %}active{% endif %}"
            href="{% url 'adminapp:category_read' %}">
             категории
-            {% if category %}
-                :{{ category.name }}
+            {% if object_list.0.category %}
+                : {{ object_list.0.category.name }}
             {% endif %}
         </a>
     </li>

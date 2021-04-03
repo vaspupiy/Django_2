@@ -302,6 +302,7 @@ class ProductListView(ListView):
         context = super().get_context_data(**kwargs)
         title = 'товары категории'
         context['title'] = title
+        print(context)
         return context
 
     def get_queryset(self):

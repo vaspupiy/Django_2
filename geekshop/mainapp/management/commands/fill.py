@@ -32,4 +32,5 @@ class Command(BaseCommand):
             prod['category'] = _cat
             Product.objects.create(**prod)
 
+        ShopUser.objects.all().delete()
         ShopUser.objects.create_superuser('django', 'django@local.db', 'geekbrains', age=30)
