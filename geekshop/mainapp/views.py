@@ -10,12 +10,6 @@ from mainapp.models import Product, ProductCategory
 from geekshop.settings import BASE_DIR
 
 
-def get_basket(user):
-    if user.is_authenticated:
-        return Basket.objects.filter(user=user)
-    return []
-
-
 def get_hot_product():
     products_list = Product.objects.filter(is_active=True)
     return random.choice(list(products_list))
@@ -36,7 +30,6 @@ def main(request):
         'title': 'Главная',
         'links_menu': links_menu,
         'products': products,
-        'basket': get_basket(request.user),
     }
     return render(request, 'mainapp/index.html', content)
 
@@ -68,7 +61,6 @@ def products(request, pk=None):
             'links_menu': links_menu,
             'category': category_item,
             'products': products_paginator,
-            'basket': get_basket(request.user),
         }
 
         return render(request, 'mainapp/products_list.html', content)
@@ -81,7 +73,6 @@ def products(request, pk=None):
         'links_menu': links_menu,
         'same_products': same_products,
         'hot_product': hot_product,
-        'basket': get_basket(request.user),
     }
 
     return render(request, 'mainapp/products.html', content)
@@ -92,7 +83,6 @@ def product(request, pk):
     content = {
         'title': 'продукт',
         'product': get_object_or_404(Product, pk=pk),
-        'basket': get_basket(request.user),
         'links_menu': links_menu,
 
     }
@@ -105,6 +95,5 @@ def contact(request):
     content = {
         'title': 'Контакты',
         'locations': locations,
-        'basket': get_basket(request.user),
     }
     return render(request, 'mainapp/contact.html', content)

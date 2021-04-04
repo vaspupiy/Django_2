@@ -1,0 +1,21 @@
+{% extends 'authapp/base.html' %}
+
+{% block content %}
+{#    {% if is_send_mail %}#}
+        <h3>Ну ништяк! </h3>
+        <p>Письмо с инструкциями отправлено!</p>
+        <button class="btn-link form-control">
+        <a href="{% url 'auth:login' %}">
+            На страничку авторизации
+        </a>
+    </button>
+{#    {% else %}#}
+{#        <h3>Ой все!!!!</h3>#}
+{#        <p>Что-то пошло не так и не туда...</p>#}
+{#        <button class="btn-link form-control">#}
+{#        <a href="{% url 'authapp:register' %}">#}
+{#            регистрация#}
+{#        </a>#}
+{#    </button>#}
+{#    {% endif %}#}
+{% endblock %}
