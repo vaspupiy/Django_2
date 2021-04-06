@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import json
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'social_django',
 
     'mainapp',
     'authapp',
@@ -65,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'mainapp.context_processor.basket'
             ],
         },
     },
@@ -125,9 +128,48 @@ STATICFILES_DIRS = (
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = (
-    BASE_DIR / 'media'
+        BASE_DIR / 'media'
 )
 
 AUTH_USER_MODEL = 'authapp.ShopUser'
 
 LOGIN_URL = '/auth/login/'
+
+BASE_URL = 'http://localhost:8000'
+
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 25
+EMAIL_HOST_USER ='django@db.local'
+EMAIL_HOST_PASSWORD = 'greeckshop'
+EMAIL_USE_SSL = False
+
+# EMAIL_HOST = 'smtp.yandex.ru'
+# EMAIL_PORT = 465
+# EMAIL_HOST_USER = 'ChtobNePalitsia@yandex.ru'
+# EMAIL_HOST_PASSWORD = '*************'
+# EMAIL_USE_TLS = False
+# EMAIL_USE_SSL = True
+
+# SERVER_EMAIL = EMAIL_HOST_USER
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# python
+# EMAIL_HOST_USER = None
+# EMAIL_HOST_PASSWORD = None
+
+# вариант логирования сообщений почты в виде файлов вместо отправки
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = 'tmp/email-messages/'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.vk.VKOAuth2',
+)
+
+with open('geekshop/json/vk.json') as f:
+    vk = json.load(f)
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = vk['']
+SOCIAL_AUTH_VK_OAUTH2_SECRET = vk['']
+# SOCIAL_AUTH_VK_OAUTH2_KEY = '7814999'
+# SOCIAL_AUTH_VK_OAUTH2_SECRET = 'GsF6YWPcJky8CAFx2leT'

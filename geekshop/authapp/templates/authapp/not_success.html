@@ -1,0 +1,11 @@
+{% extends 'authapp/base.html' %}
+
+{% block content %}
+    <h3>Ой все!!!!</h3>
+    <p>Что-то пошло не так и не туда...</p>
+    <button class="btn-link form-control">
+        <a href="{% url 'authapp:register' %}">
+            регистрация
+        </a>
+    </button>
+{% endblock %}
