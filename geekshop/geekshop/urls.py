@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path, include
+from django.urls import path, include, re_path
 import mainapp.views as mainapp
 
 urlpatterns = [
@@ -31,9 +31,11 @@ urlpatterns = [
     path('popular/', mainapp.main, name='main_popular'),
 
     path('control/', admin.site.urls),
+
+    path('', include('social_django.urls', namespace='cosial')),
+
+    # re_path(r'^auth/verify/google/oauth2/', include("social_django.urls", namespace="social")),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-

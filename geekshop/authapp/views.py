@@ -4,10 +4,12 @@ from django.core.mail import send_mail
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 
-from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm
+from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm, ShopUserProfilesEditForm
 from django.urls import reverse
 
 from authapp.models import ShopUser
+
+from django.db import transaction
 
 
 def login(request):
@@ -81,20 +83,26 @@ def not_success(request):
     return render(request, 'authapp/not_success.html', content)
 
 
+@transaction.atomic
 def edit(request):
     title = 'редактирование'
 
     if request.method == 'POST':
         edit_form = ShopUserEditForm(request.POST, request.FILES, instance=request.user)
-        if edit_form.is_valid():
+        profile_form = ShopUserProfilesEditForm(request.POST, instance=request.user.shopuserprofile)
+        print('profile_form', profile_form)
+        if edit_form.is_valid() and profile_form.is_valid():
+            # profile_form.save() не пишем, тюкю отработает save() сигналу
             edit_form.save()
             return HttpResponseRedirect(reverse('auth:edit'))
     else:
         edit_form = ShopUserEditForm(instance=request.user)
+        profile_form = ShopUserProfilesEditForm(instance=request.user.shopuserprofile)
 
     content = {
         'title': title,
-        'edit_form': edit_form
+        'edit_form': edit_form,
+        'profile_form': profile_form,
     }
 
     return render(request, 'authapp/edit.html', content)
@@ -116,5 +124,5 @@ def verify(request, email, activation_key):
         user.is_active = True
         user.activation_key = ''
         user.save()
-        auth.login(request, user)
+        auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
     return render(request, 'authapp/veryfication.html')
