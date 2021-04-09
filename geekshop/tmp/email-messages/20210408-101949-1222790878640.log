@@ -1,0 +1,13 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?b?0J/QvtC00YLQstC10YDQttC00LXQvdC40LUg0YPRh9C10YLQvdC+0Lkg0LfQsNC/?=
+ =?utf-8?b?0LjRgdC4IHRlc3RfMDlAZ21haWwuY29t?=
+From: django@db.local
+To: test_09@gmail.com
+Date: Thu, 08 Apr 2021 07:19:49 -0000
+Message-ID: <161786638965.19552.18394161704358353253@DESKTOP-RMBQM94>
+
+Сылка для активации: http://localhost:8000/auth/verify/test_09@gmail.com/d493714038d4df5bc25d3ed50458bce6e7c888d3/
+-------------------------------------------------------------------------------

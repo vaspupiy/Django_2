@@ -1,2 +1,6 @@
 env/*
 geekshop/env/*
+geekshop/geekshop/json/vk.json
+*vk.json
+geekshop/geekshop/json/google+.json
+*google+.json

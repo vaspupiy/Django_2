@@ -5,6 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, User
 from django import forms
 
 from authapp.models import ShopUser
+from .models import ShopUserProfile
 
 
 class ShopUserLoginForm(AuthenticationForm):
@@ -89,8 +90,14 @@ class ShopUserEditForm(UserChangeForm):
         return data
 
 
-    # def clean_email(self):
-    #     data = self.cleaned_data['email']
-    #     if ShopUser.objects.filter(email=data).exists():
-    #         raise forms.ValidationError("Email exists")
-    #     return data
+class ShopUserProfilesEditForm(forms.ModelForm):
+    class Meta:
+        model = ShopUserProfile
+        fields = ('tag_line', 'about_me', 'gender',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+            field.help_text = ''
+
