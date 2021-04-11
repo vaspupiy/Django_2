@@ -68,7 +68,6 @@ class OrderDetailView(DetailView):
 class OrderUpdateView(UpdateView):
     model = Order
     success_url = reverse_lazy('ordersapp:orders_list')
-    # form_class = OrderForm
     fields = []
 
     def get_context_data(self, **kwargs):

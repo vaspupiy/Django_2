@@ -1,0 +1,28 @@
+{% extends 'adminapp/base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <p>
+        {% for item in order_list %}
+            <div class="list-group-item">
+                {{ item }}; статус: {{ item.status }}{{ item.pk }}
+                {% if item.status != 'FM' and  item.status != 'CNC' %}
+                    {% if item.status != 'STP' %}
+                        <a href="{% url 'adminapp:user_order_status_change' 'previous' item.pk %}">
+                            предыдущий
+                        </a>
+                    {% endif %}
+                    {% if item.status != 'RDY' %}
+                        <a href="{% url 'adminapp:user_order_status_change' 'next' item.pk %}">
+                            следующий
+                        </a>
+                    {% endif %}
+                {% endif %}
+                <a href="{% url 'adminapp:user_order_status_change' 'cancel' item.pk %}">
+                    отменить
+                </a>
+            </div>
+        {% endfor %}
+    </p>
+{% endblock %}
