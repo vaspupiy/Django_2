@@ -34,6 +34,8 @@ urlpatterns = [
 
     path('', include('social_django.urls', namespace='cosial')),
 
+    path('order/', include('ordersapp.urls', namespace='ordersapp'))
+
     # re_path(r'^auth/verify/google/oauth2/', include("social_django.urls", namespace="social")),
 ]
 

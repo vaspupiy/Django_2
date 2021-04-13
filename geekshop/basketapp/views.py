@@ -1,67 +1,149 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 
 from mainapp.models import Product
 
 from basketapp.models import Basket
 
 
-@login_required
-def basket(request):
-    basket_item = Basket.objects.filter(user=request.user).order_by('product__category')
-    content = {
-        'title': 'корзина',
-        'basket_items': basket_item,
-    }
-    return render(request, 'basketapp/basket.html', content)
+# @login_required
+# def basket(request):
+#     basket_item = Basket.objects.filter(user=request.user).order_by('product__category')
+#     content = {
+#         'title': 'корзина',
+#         'basket_items': basket_item,
+#     }
+#     return render(request, 'basketapp/basket.html', content)
+
+class BasketListView(ListView):
+    model = Basket
+    template_name = 'basketapp/basket.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        title = 'корзина'
+        context['title'] = title
+        return context
+
+    @method_decorator(user_passes_test(lambda u: u.is_active))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
 
-@login_required()
-def basket_add(request, pk):
-    if 'login' in request.META.get('HTTP_REFERER'):
-        return HttpResponseRedirect(reverse('products:product', args=[pk]))
-    product_item = get_object_or_404(Product, pk=pk)
-
-    basket_item = Basket.objects.filter(product=product_item, user=request.user).first()
-
-    if not basket_item:
-        basket_item = Basket(user=request.user, product=product_item)
-
-    basket_item.quantity += 1
-    basket_item.save()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-@login_required
-def basket_remove(request, pk):
-    basket_item = get_object_or_404(Basket, pk=pk)
-    basket_item.delete()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+# @login_required()
+# def basket_add(request, pk):
+#     if 'login' in request.META.get('HTTP_REFERER'):
+#         return HttpResponseRedirect(reverse('products:product', args=[pk]))
+#     product_item = get_object_or_404(Product, pk=pk)
+#
+#     basket_item = Basket.objects.filter(product=product_item, user=request.user).first()
+#
+#     if not basket_item:
+#         basket_item = Basket(user=request.user, product=product_item)
+#
+#     basket_item.quantity += 1
+#     basket_item.save()
+#     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-@login_required
-def basket_edit(request, pk, quantity):
-    if request.is_ajax():
-        quantity = int(quantity)
-        new_basket_item = Basket.objects.get(pk=int(pk))
+class BasketAddView(CreateView):
+    model = Basket
 
-        if quantity > 0:
-            new_basket_item.quantity = quantity
-            new_basket_item.save()
-        else:
-            new_basket_item.delete()
+    def get(self, request, *args, **kwargs):
+        if 'login' in request.META.get('HTTP_REFERER'):
+            return HttpResponseRedirect(reverse('products:product', args=(kwargs['pk'],)))
+        product_item = get_object_or_404(Product, pk=kwargs['pk'])
 
-        basket_items = Basket.objects.filter(user=request.user). \
-            order_by('product__category')
+        self.object = Basket.objects.filter(product=product_item, user=request.user).first()
 
-        content = {
-            'basket_items': basket_items,
-        }
+        if not self.object:
+            self.object = Basket(user=request.user, product=product_item)
 
-        result = render_to_string('basketapp/includes/inc_basket_list.html', content)
+        self.object.quantity += 1
+        self.object.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-        return JsonResponse({'result': result})
+    @method_decorator(user_passes_test(lambda u: u.is_active))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
+
+# @login_required
+# def basket_remove(request, pk):
+#     basket_item = get_object_or_404(Basket, pk=pk)
+#     basket_item.delete()
+#     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+#
+
+class BasketDeleteView(DeleteView):
+    model = Basket
+    template_name = 'basketapp/basket.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    @method_decorator(user_passes_test(lambda u: u.is_active))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+
+# @login_required
+# def basket_edit(request, pk, quantity):
+#     if request.is_ajax():
+#         quantity = int(quantity)
+#         new_basket_item = Basket.objects.get(pk=int(pk))
+#
+#         if quantity > 0:
+#             new_basket_item.quantity = quantity
+#             new_basket_item.save()
+#         else:
+#             new_basket_item.delete()
+#
+#         basket_items = Basket.objects.filter(user=request.user). \
+#             order_by('product__category')
+#
+#         content = {
+#             'basket_items': basket_items,
+#         }
+#
+#         result = render_to_string('basketapp/includes/inc_basket_list.html', content)
+#
+#         return JsonResponse({'result': result})
+
+class BasketUpdateView(UpdateView):
+    model = Basket
+    template_name = 'basketapp/basket.html'
+
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax():
+            quantity = int(kwargs['quantity'])
+            new_basket_item = Basket.objects.get(pk=int(kwargs['pk']))
+
+            if quantity > 0:
+                new_basket_item.quantity = quantity
+                new_basket_item.save()
+            else:
+                new_basket_item.delete()
+
+            object_list = Basket.objects.filter(user=request.user). \
+                order_by('product__category')
+
+            content = {
+                'object_list': object_list,
+            }
+
+            result = render_to_string('basketapp/includes/inc_basket_list.html', content)
+            return JsonResponse({'result': result})
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+    @method_decorator(user_passes_test(lambda u: u.is_active))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)

@@ -45,6 +45,13 @@
                             <a href="{% url 'adminapp:user_delete' object.pk %}">восстановить</a>
                         {% endif %}
                     </button>
+                    <div>
+                        <button>
+                            <a href="{% url 'adminapp:user_order_update' object.pk %}" class="">
+                               управление статусом заказа
+                            </a>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="user_name">

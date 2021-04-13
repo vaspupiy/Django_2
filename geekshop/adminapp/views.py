@@ -10,7 +10,6 @@ from authapp.forms import ShopUserRegisterForm
 from authapp.models import ShopUser
 from mainapp.models import ProductCategory, Product
 
-
 # @user_passes_test(lambda u: u.is_superuser)
 # def users(request):
 #     users_list = ShopUser.objects.all().order_by('-is_active', '-is_superuser', '-is_staff', 'username')
@@ -18,6 +17,7 @@ from mainapp.models import ProductCategory, Product
 #         'objects': users_list
 #     }
 #     return render(request, 'adminapp/users.html', content, )
+from ordersapp.models import Order
 
 
 class UserListView(ListView):
@@ -417,3 +417,26 @@ class ProductDeleteView(DeleteView):
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, request, *args, **kwargs):
         return super(ProductDeleteView, self).dispatch(request, *args, **kwargs)
+
+
+def user_order_update(request, pk):
+    order_list = Order.objects.filter(user=pk, is_active=True)
+    content = {
+        'order_list': order_list,
+    }
+    return render(request, 'adminapp/user_order_update.html', content)
+
+
+def user_order_status_change(request, status, pk):
+    order = get_object_or_404(Order, pk=pk)
+    order_status_list = ['STP', 'PRD', 'PD', 'RDY', ]
+    if status == 'next':
+        order.status = order_status_list[order_status_list.index(order.status) + 1]
+        order.save()
+    elif status == 'previous':
+        order.status = order_status_list[order_status_list.index(order.status) - 1]
+        order.save()
+    elif status == 'cancel':
+        order.status = 'CNC'
+        order.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
