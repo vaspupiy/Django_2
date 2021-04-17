@@ -23,8 +23,9 @@ SECRET_KEY = 'r(s=@b^f@3ov9s12^#_9#ym%le#ww7h%)^86835acq3k#syqct'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -87,9 +88,14 @@ WSGI_APPLICATION = 'geekshop.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': 'geekshop',
+        'ENGINE': 'django.db.backends.postgresql',
+        'USER': 'postgres',
     }
 }
 
@@ -215,4 +221,3 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = GOOGLE_PLUS['SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
 
 # print(GOOGLE_PLUS['SOCIAL_AUTH_GOOGLE_OAUTH2_KEY'])
 # print(GOOGLE_PLUS['SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET'])
-
