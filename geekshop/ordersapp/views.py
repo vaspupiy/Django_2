@@ -13,6 +13,7 @@ from ordersapp.models import Order, OrderItem
 from django.dispatch import receiver
 from django.http import JsonResponse
 
+
 class OrderListView(ListView):
     model = Order
 
@@ -67,6 +68,7 @@ class OrderCreateView(CreateView):
 
 class OrderDetailView(DetailView):
     model = Order
+
 
 class OrderUpdateView(UpdateView):
     model = Order
