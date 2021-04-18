@@ -17,7 +17,7 @@ def save_user_profile(backend, user, response, *args, **kwargs):
         # ну, хоть что-то... распарсить api_url - ума не хватило, но может и нет возм., т.к. профиль закрыт с 19года...
         if response['picture'] and not user.avatar:
             url = response['picture']
-            image_name = url.split("/")[-1] + '.jpg'
+            image_name = response[id]
             pars = requests.get(url)
             with open(os.path.join(settings.BASE_DIR, f'media/users_avatars/{image_name}'), "wb") as f:
                 f.write(pars.content)
