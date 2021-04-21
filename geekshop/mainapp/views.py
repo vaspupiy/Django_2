@@ -25,7 +25,7 @@ def main(request):
         {'href': 'main_new', 'name': 'новинки'},
         {'href': 'main_popular', 'name': 'популярное'},
     ]
-    products = Product.objects.all()[:4]
+    products = Product.objects.filter(is_active=True, category__is_active=True).select_related()[:4]
     content = {
         'title': 'Главная',
         'links_menu': links_menu,
