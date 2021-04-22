@@ -28,7 +28,6 @@ class BasketListView(ListView):
         context = super().get_context_data(**kwargs)
         title = 'корзина'
         context['title'] = title
-        print(context)
         return context
 
     @method_decorator(user_passes_test(lambda u: u.is_active))
