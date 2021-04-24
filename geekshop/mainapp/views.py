@@ -2,9 +2,11 @@ import json
 import os
 import random
 
+from django.conf import settings
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404
 
+from django.core.cache import cache
 from basketapp.models import Basket
 from mainapp.models import Product, ProductCategory
 from geekshop.settings import BASE_DIR
@@ -34,9 +36,22 @@ def main(request):
     return render(request, 'mainapp/index.html', content)
 
 
+def get_links_menu():
+    if settings.LOW_CACHE:
+        key = "links_menu"
+        links_menu = cache.get(key)
+        if links_menu is None:
+            links_menu = ProductCategory.objects.filter(is_active=True)
+            cache.set(key, links_menu)
+        return links_menu
+    else:
+        return ProductCategory.objects.filter(is_active=True)
+
+
 def products(request, pk=None):
     title = 'продукты'
-    links_menu = ProductCategory.objects.all()
+    # links_menu = ProductCategory.objects.all()
+    links_menu = get_links_menu()
     page = request.GET.get('p', 1)
 
     if pk is not None:
