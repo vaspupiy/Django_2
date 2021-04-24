@@ -112,3 +112,14 @@ def contact(request):
         'locations': locations,
     }
     return render(request, 'mainapp/contact.html', content)
+
+def get_category(pk):
+    if settings.LOW_CACHE:
+        key = f'category_{pk}'
+        category = cache.get(key)
+        if category is None:
+            category = ProductCategory.objects.get(pk=pk)
+            cache.set(key, category)
+        return category
+    else:
+        return ProductCategory.objects.get(pk=pk)
