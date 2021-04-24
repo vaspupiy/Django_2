@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils.functional import cached_property
 
 from mainapp.models import Product
 
@@ -24,18 +25,25 @@ class Basket(models.Model):
     #     unique_together = ('user', 'product',)
 
     # Добавлено после просмотра вебинара №6
+
+    @cached_property
+    def get_items_cached(self):
+        return self.user.basket.select_related()
+
     @property
     def product_cost(self):
         return self.quantity * self.product.price
 
     @property
     def total_quantity(self):
-        _item = Basket.objects.filter(user=self.user)
+        # _item = Basket.objects.filter(user=self.user)
+        _item = self.get_items_cached
         return sum(list(map(lambda x: x.quantity, _item)))
 
     @property
     def total_cost(self):
-        _item = Basket.objects.filter(user=self.user)
+        # _item = Basket.objects.filter(user=self.user)
+        _item = self.get_items_cached
         return sum(list(map(lambda x: x.product_cost, _item)))
 
     @staticmethod
