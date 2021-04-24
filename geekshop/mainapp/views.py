@@ -59,7 +59,8 @@ def products(request, pk=None):
             products_list = Product.objects.all().order_by('-is_active', 'price')
             category_item = {'name': 'все', 'pk': 0}
         else:
-            category_item = get_object_or_404(ProductCategory, pk=pk)
+            # category_item = get_object_or_404(ProductCategory, pk=pk)
+            category_item = get_category(pk)
             products_list = Product.objects.filter(category=category_item, is_active=True)
 
         paginator = Paginator(products_list, 2)
