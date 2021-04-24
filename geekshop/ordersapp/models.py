@@ -25,7 +25,7 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name='создан')
     updated = models.DateTimeField(auto_now=True, verbose_name='изменен')
     status = models.CharField(choices=ORDER_STATUSES, default=FORMING, verbose_name='статус', max_length=3)
-    is_active = models.BooleanField(default=True, verbose_name='активен')
+    is_active = models.BooleanField(default=True, verbose_name='активен', db_index=True)
 
     class Meta:
         ordering = ('-created',)

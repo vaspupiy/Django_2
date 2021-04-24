@@ -37,7 +37,7 @@ class ShopUserProfile(models.Model):
     user = models.OneToOneField(ShopUser, unique=True, null=False, db_index=True, on_delete=models.CASCADE)
     tag_line = models.CharField(max_length=128, verbose_name='Теги', blank=True)
     about_me = models.TextField(verbose_name='о себе', blank=True, max_length=512)
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, verbose_name='пол')
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, verbose_name='пол', db_index=True)
 
     # Мы используем декоратор @receiver, который при получении определенных сигналов вызывает задекорированный метод.
     # В нашем случае сигналом является сохранение (post_save) объекта модели ShopUser (sender=ShopUser).
