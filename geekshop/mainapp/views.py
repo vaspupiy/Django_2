@@ -112,7 +112,7 @@ def main(request):
     return render(request, 'mainapp/index.html', content)
 
 
-@never_cache
+# @never_cache
 def products(request, pk=None):
     title = 'продукты'
     # links_menu = ProductCategory.objects.all()
@@ -161,7 +161,6 @@ def products(request, pk=None):
     return render(request, 'mainapp/products.html', content)
 
 
-@never_cache
 def product(request, pk):
     # links_menu = ProductCategory.objects.all()
     links_menu = get_links_menu()

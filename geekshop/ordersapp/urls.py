@@ -10,7 +10,7 @@ urlpatterns = [
     path('read/<int:pk>/', ordersapp.OrderDetailView.as_view(), name='order_read'),
     path('update/<int:pk>/', ordersapp.OrderUpdateView.as_view(), name='order_update'),
     path('delete/<int:pk>/', ordersapp.OrderDeleteView.as_view(), name='order_delete'),
-    path('product/<int:pk>/price/', ordersapp.get_product_price, name='order_delete'),
+    path('product/<int:pk>/price/', ordersapp.get_product_price, name='product_price'),
 
     path('forming/complite/<int:pk>/', ordersapp.order_forming_complete, name='order_forming_complete'),
 ]
