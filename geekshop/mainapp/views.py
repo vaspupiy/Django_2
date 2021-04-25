@@ -125,7 +125,7 @@ def products(request, pk=None):
             # category_item = get_object_or_404(ProductCategory, pk=pk)
             category_item = get_category(pk)
             # products_list = Product.objects.filter(category=category_item, is_active=True)
-            products_list = get_products_in_category_ordered_by_price()
+            products_list = get_products_in_category_ordered_by_price(pk)
 
         paginator = Paginator(products_list, 2)
 
